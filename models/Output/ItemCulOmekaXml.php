@@ -40,7 +40,11 @@ class Output_ItemCulOmekaXml extends Output_AbstractCulOmekaXml
         
         // itemType
         $this->_buildItemTypeForItem($this->_record, $itemElement);
-        
+
+	// fcd1, 02/14/14:
+	// OriginalFilename
+	$this->_buildOriginalFilenamesForItem($this->_record, $itemElement);
+
         // elementSetContainer
         $this->_buildElementSetContainerForRecord($this->_record, $itemElement);
         

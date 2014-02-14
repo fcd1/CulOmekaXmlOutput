@@ -262,6 +262,25 @@ abstract class Output_AbstractCulOmekaXml
         }
     }
 
+    // fcd1, 02/14/14:
+    // Print out original filename
+    protected function _buildOriginalFilenamesForItem(Item $item, DOMElement $parentElement)
+    {
+      // Return if the item has no files.
+      if (!count($item->Files)) {
+	return null;
+      }
+      $originalFilenameElement = $this->_createElement('OriginalFilename');
+      foreach ($item->Files as $file) {
+	                    $textElement = $this->_createElement('text',
+								 $file->original_filename,
+								 null,
+								 $originalFilenameElement);
+      }
+      $parentElement->appendChild($originalFilenameElement);
+    }
+
+
     /**
      * Build an itemType element in an item context.
      * 
