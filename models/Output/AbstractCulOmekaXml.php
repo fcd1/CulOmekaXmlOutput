@@ -179,54 +179,6 @@ abstract class Output_AbstractCulOmekaXml
      * @param bool $getItemType Whether to get the item type metadata.
      * @return stdClass A list of element sets or an item type.
      */
-    // fcd1, 02/10/14:
-    // Commented out original function _getElemetSetsByElementTexts(), and
-    // make changes on a copy.
-    // Original function is below
-    /*
-    protected function _getElemetSetsByElementTexts(Omeka_Record_AbstractRecord $record, $getItemType = false)
-    {
-        $elementSets = array();
-        $itemType = array();
-        
-        // Get all element texts associated with the provided record.
-        $elementTexts = $record->getAllElementTexts();
-
-        foreach ($elementTexts as $elementText) {
-            
-            // Get associated element and element set records.
-            $element = get_db()->getTable('Element')->find($elementText->element_id);
-            $elementSet = get_db()->getTable('ElementSet')->find($element->element_set_id);
-            
-            // Differenciate between the element sets and the "Item Type 
-            // Metadata" pseudo element set.
-            if (ElementSet::ITEM_TYPE_NAME == $elementSet->name) {
-                $itemType['elements'][$element->id]['name'] = $element->name;
-                $itemType['elements'][$element->id]['description'] = $element->description;
-                $itemType['elements'][$element->id]['elementTexts'][$elementText->id]['text'] = $elementText->text;
-            } else {
-                $elementSets[$elementSet->id]['name'] = $elementSet->name;
-                $elementSets[$elementSet->id]['description'] = $elementSet->description;
-                $elementSets[$elementSet->id]['elements'][$element->id]['name'] = $element->name;
-                $elementSets[$elementSet->id]['elements'][$element->id]['description'] = $element->description;
-                $elementSets[$elementSet->id]['elements'][$element->id]['elementTexts'][$elementText->id]['text'] = $elementText->text;
-            }
-        }
-        
-        // Return the item type metadata.
-        if ($getItemType) {
-            $itemType['id'] = $record->Type->id;
-            $itemType['name'] = $record->Type->name;
-            $itemType['description'] = $record->Type->description;
-            return $itemType;
-        }
-        
-        // Return the element sets metadata.
-        return $elementSets;
-    }
-    */
-    // fcd1, 02/10/14:
-    // This is the copy of the function where the changes will be made
     protected function _getElemetSetsByElementTexts(Omeka_Record_AbstractRecord $record, $getItemType = false)
     {
         $elementSets = array();
@@ -279,10 +231,7 @@ abstract class Output_AbstractCulOmekaXml
      * @return void|null
      */
     // fcd1, 02/10/14:
-    // Commented out original function _buildElementSetContainerForRecord(), and
-    // make changes on a copy.
-    // Original function is below
-    /*
+    // Modified code from the orgiginal _buildElementSetContainerForRecord
     protected function _buildElementSetContainerForRecord(Omeka_Record_AbstractRecord $record, DOMElement $parentElement)
     {
         $elementSets = $this->_getElemetSetsByElementTexts($record);
@@ -292,136 +241,33 @@ abstract class Output_AbstractCulOmekaXml
             return null;
         }
         
-        // elementSetContainer
-        $elementSetContainerElement = $this->_createElement('elementSetContainer');
         foreach ($elementSets as $elementSetId => $elementSet) {
-             // elementSet
-            $elementSetElement = $this->_createElement('elementSet', null, $elementSetId);
-            $nameElement = $this->_createElement('name', $elementSet['name'], null, $elementSetElement);
-            $descriptionElement = $this->_createElement('description', $elementSet['description'], null, $elementSetElement);
-            // elementContainer
-            $elementContainerElement = $this->_createElement('elementContainer');
-            foreach ($elementSet['elements'] as $elementId => $element) {
-                // Exif data may contain invalid XML characters. Avoid encoding 
-                // errors by skipping relevent elements.
-                if ('Omeka Image File' == $elementSet['name'] && ('Exif Array' == $element['name'] || 'Exif String' == $element['name'])) {
-                    continue;
-                }
-                // element
-                $elementElement = $this->_createElement('element', null, $elementId);
-                $nameElement = $this->_createElement('name', $element['name'], null, $elementElement);
-                $descriptionElement = $this->_createElement('description', $element['description'], null, $elementElement);
-                // elementTextContainer
-                $elementTextContainerElement = $this->_createElement('elementTextContainer');
-                foreach ($element['elementTexts'] as $elementTextId => $elementText) {
-                    // elementText
-                    $elementTextElement = $this->_createElement('elementText', null, $elementTextId);
-                    $textElement = $this->_createElement('text', $elementText['text'], null, $elementTextElement);
-                    $elementTextContainerElement->appendChild($elementTextElement);
-                }
-                $elementElement->appendChild($elementTextContainerElement);
-                $elementContainerElement->appendChild($elementElement);
-            }
-            $elementSetElement->appendChild($elementContainerElement);
-            $elementSetContainerElement->appendChild($elementSetElement);
-        }
-        $parentElement->appendChild($elementSetContainerElement);
-    }
-    */
-    // fcd1, 02/10/14:
-    // This is the copy of the function where the changes will be made
-    protected function _buildElementSetContainerForRecord(Omeka_Record_AbstractRecord $record, DOMElement $parentElement)
-    {
-        $elementSets = $this->_getElemetSetsByElementTexts($record);
-        
-        // Return if there are no element sets.
-        if (!$elementSets) {
-            return null;
-        }
-        
-        // elementSetContainer
-	// fcd1, 02/10/14:
-	// Get rid of elementSetContainer. So its direct children, the elementset,
-	// will now be direct children of $parentElement
-        // $elementSetContainerElement = $this->_createElement('elementSetContainer');
-        foreach ($elementSets as $elementSetId => $elementSet) {
-             // elementSet
-	  // fcd1, 02/10/14:
-	  // Instead of creating elementSet, create XML element using the name of the set
-	  /* 
-            $elementSetElement = $this->_createElement('elementSet', null, $elementSetId);
-            $nameElement = $this->_createElement('name', $elementSet['name'], null, $elementSetElement);
-	    $descriptionElement = $this->_createElement('description', $elementSet['description'], null, $elementSetElement);
-	  */
+
 	    // fcd1, 02/10/14:
 	    // remove space from name, and create an element using the resulting string
 	    $elementSetNameNoSpaces = str_replace(" ","",$elementSet['name']);
             $elementSetElement = $this->_createElement($elementSetNameNoSpaces);
 
-            // elementContainer
-	    // fcd1, 02/10/14:
-	    // Get rid of elementContainer.
-            // $elementContainerElement = $this->_createElement('elementContainer');
             foreach ($elementSet['elements'] as $elementId => $element) {
                 // Exif data may contain invalid XML characters. Avoid encoding 
                 // errors by skipping relevent elements.
                 if ('Omeka Image File' == $elementSet['name'] && ('Exif Array' == $element['name'] || 'Exif String' == $element['name'])) {
                     continue;
                 }
-                // element
-		// fcd1, 02/10/14:
-		// Instead of creating element, create element using the name of the set
-		/* 
-		 $elementElement = $this->_createElement('element', null, $elementId);
-		 $nameElement = $this->_createElement('name', $element['name'], null, $elementElement);
-		 $descriptionElement = $this->_createElement('description', $element['description'], null, $elementElement);
-		*/
+
 		// fcd1, 02/10/14:
 		// remove space and '/' from name, and create an element using the resulting string
 		$elementNameNoSpaces = str_replace(" ","",$element['name']);
 		$elementNameNoSpaces = str_replace("/","",$elementNameNoSpaces);
 		$elementElement = $this->_createElement($elementNameNoSpaces);
-		
-		// elementTextContainer
-		// fcd1, 02/10/14:
-		// Get rid of elementTextContainer.
-                // $elementTextContainerElement = $this->_createElement('elementTextContainer');
+
                 foreach ($element['elementTexts'] as $elementTextId => $elementText) {
-		  // elementText
-		  // fcd1, 02/10/14:
-		  // Get rid of elementText.
-		  // $elementTextElement = $this->_createElement('elementText', null, $elementTextId);
                     $textElement = $this->_createElement('text', $elementText['text'], null, $elementElement);
-		    // fcd1, 02/10/14:
-		    // Get rid of elementContainer, so append directly to the element
-                    // $elementTextContainerElement->appendChild($elementTextElement);
-		    // fcd1, 02/10/14:
-		    // Get rid of elementText. Element text is appended directly to
-		    // $elementElement at time of creation
-		    // $elementElement->appendChild($elementTextElement);
                 }
-		// fcd1, 02/10/14:
-		// Get rid of elementContainer.
-                // $elementElement->appendChild($elementTextContainerElement);
-		// fcd1, 02/10/14:
-		// Get rid of elementContainer.
-                // $elementContainerElement->appendChild($elementElement)
-		// Each element will now be a directy child of the element set
 		$elementSetElement->appendChild($elementElement);;
             }
-	    // fcd1, 02/10/14:
-	    // Get rid of elementContainer.
-            // $elementSetElement->appendChild($elementContainerElement);
-	    // fcd1, 02/10/14:
-	    // Get rid of elementSetContainer. So its direct children, the elementset,
-	    // will now be direct children of $parentElement
-            // $elementSetContainerElement->appendChild($elementSetElement);
 	    $parentElement->appendChild($elementSetElement);
         }
-	// fcd1, 02/10/14:
-	// Get rid of elementSetContainer. So its direct children, the elementset,
-	// will now be direct children of $parentElement
-        // $parentElement->appendChild($elementSetContainerElement);
     }
 
     /**
