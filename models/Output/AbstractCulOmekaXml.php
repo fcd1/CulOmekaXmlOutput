@@ -160,8 +160,6 @@ abstract class Output_AbstractCulOmekaXml
         $this->_createElement('pageNumber',   $pagination['page'],          null, $paginationElement);
         $this->_createElement('perPage',      $pagination['per_page'],      null, $paginationElement);
         $this->_createElement('totalResults', $pagination['total_results'], null, $paginationElement);
-
-      return;
     }
     
     /**
