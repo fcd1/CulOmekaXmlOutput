@@ -148,14 +148,8 @@ abstract class Output_AbstractCulOmekaXml
      * @param DOMElement The parent container element.
      * @return void
      */
-    // fcd1, 02/10/14:
-    // We don't want pagination info; furthermore, we want all the elements in one
-    // page, so the "Results per page (admin)" will be set to a large enough number that
-    // there is no pagination.
-    // Original code will be commented out, and we will just return
     protected function _setContainerPagination(DOMElement $parentElement)
     {
-      /*
         // Return if the pagination data is not registered.
         if (!Zend_Registry::isRegistered('pagination')) {
             return;
@@ -166,7 +160,7 @@ abstract class Output_AbstractCulOmekaXml
         $this->_createElement('pageNumber',   $pagination['page'],          null, $paginationElement);
         $this->_createElement('perPage',      $pagination['per_page'],      null, $paginationElement);
         $this->_createElement('totalResults', $pagination['total_results'], null, $paginationElement);
-      */
+
       return;
     }
     
