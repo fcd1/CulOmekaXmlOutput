@@ -27,8 +27,10 @@ class Output_ItemCulOmekaXml extends Output_AbstractCulOmekaXml
         $itemElement->setAttribute('featured', $this->_record->featured);
         
         if (!in_array($this->_context, array('file'))) {
-            // fileContainer
-            $this->_buildFileContainerForItem($this->_record, $itemElement);
+	  // fileContainer
+	  // fcd1, 02/14/14:
+	  // We don't want file info
+	  // $this->_buildFileContainerForItem($this->_record, $itemElement);
         }
         
         if (!in_array($this->_context, array('collection'))) {
