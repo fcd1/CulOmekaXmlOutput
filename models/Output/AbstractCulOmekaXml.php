@@ -363,11 +363,8 @@ abstract class Output_AbstractCulOmekaXml
      * element.
      * @return void|null
      */
-    // fcd1, 02/10/14:
-    // We don't want the file information, so remove just return null.
-    // existing code will be commented out
     // fcd1, 02/12/14:
-    // Actually, we want to know the Omeka Collection the item is in
+    // Modified original _buildCollectionForItem
     protected function _buildCollectionForItem(Item $item, DOMElement $parentElement)
     {
 
