@@ -76,6 +76,11 @@ abstract class Output_AbstractCulOmekaXml
         $this->_context = $context;
         $this->_doc = new DOMDocument('1.0', 'UTF-8');
         $this->_doc->formatOutput = true;
+	// fcd1, 02/18/14:
+	// attempt to add a comment to the document
+	$comment = $this->_generatePreambleComment();
+	$domComment = $this->_doc->createComment($comment);
+	$this->_doc->appendChild($domComment);
         $this->_buildNode();
     }
     
@@ -474,4 +479,37 @@ abstract class Output_AbstractCulOmekaXml
        $uri->setQuery($_GET);
        return $uri->getUri();
    }
+
+   // fcd1, 02/18/14:
+   // Following function is used to add a preamble comment to the XML document.
+   // This preamble attempts to explain the structure of the document and the provenance
+   // of the elements
+   protected function _generatePreambleComment()
+   {
+     $preambleComment =     
+       'The name of each XML element representing an Omeka element or element set is'.PHP_EOL;
+     $preambleComment .=     
+       'based on the name of the element or element set in Omeka. For example:'.PHP_EOL;
+     $preambleComment .=     
+       '     The "Dublin Core" element set is represented by the DublinCore XML element'.PHP_EOL;
+     $preambleComment .=     
+       '     The "Form Genre" element in MODS is represented by the FormGenre XML element'.PHP_EOL;
+     $preambleComment .=
+       PHP_EOL.'The following XML elements are based on internal Omeka data:'.PHP_EOL;
+     $preambleComment .=
+       '     The OriginalFileLoadedIntoOmeka XML element contains the name/path of'.PHP_EOL;
+     $preambleComment .=
+       '     of the file(s) loaded into Omeka for the given item.'.PHP_EOL;
+     $preambleComment .=
+       '     The OmekaCollection XML element contains the name of the Omeka collection'.PHP_EOL;
+     $preambleComment .=
+       '     containing the item, if the item belongs to an Omeka collection. Please note'.PHP_EOL;
+     $preambleComment .=
+       '     that this element is different from the Collection element in MODS, which is'.PHP_EOL;
+     $preambleComment .=
+       '     curator-populated.'.PHP_EOL;
+     return $preambleComment;
+
+   }
+
 }
