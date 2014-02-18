@@ -43,7 +43,7 @@ class Output_ItemCulOmekaXml extends Output_AbstractCulOmekaXml
 
 	// fcd1, 02/14/14:
 	// OriginalFilename
-	$this->_buildOriginalFilenamesForItem($this->_record, $itemElement);
+	$this->_buildOriginalFilesLoadedIntoOmekaForItem($this->_record, $itemElement);
 
         // elementSetContainer
         $this->_buildElementSetContainerForRecord($this->_record, $itemElement);

@@ -264,13 +264,13 @@ abstract class Output_AbstractCulOmekaXml
 
     // fcd1, 02/14/14:
     // Print out original filename
-    protected function _buildOriginalFilenamesForItem(Item $item, DOMElement $parentElement)
+    protected function _buildOriginalFilesLoadedIntoOmekaForItem(Item $item, DOMElement $parentElement)
     {
       // Return if the item has no files.
       if (!count($item->Files)) {
 	return null;
       }
-      $originalFilenameElement = $this->_createElement('OriginalFilename');
+      $originalFilenameElement = $this->_createElement('OriginalFileLoadedIntoOmeka');
       foreach ($item->Files as $file) {
 	                    $textElement = $this->_createElement('text',
 								 $file->original_filename,
