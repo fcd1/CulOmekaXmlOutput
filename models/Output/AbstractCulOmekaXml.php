@@ -285,6 +285,45 @@ abstract class Output_AbstractCulOmekaXml
       $parentElement->appendChild($originalFilenameElement);
     }
 
+    // fcd1, 03/25/14:
+    // Print out item in context
+    protected function _buildItemInContext(Item $item, DOMElement $parentElement)
+    {
+
+      $exhibit_pages = CulCustomizePlugin::return_exhibit_pages_containing_current_item();
+      $exhibit_page_containing_item = NULL;
+
+      // Check all the pages containing the item to see if we get a match                                 
+      foreach($exhibit_pages as $exhibit_page) {
+	$exhibit = $exhibit_page->getExhibit();
+	$exhibit_title = $exhibit->title;
+	$collection_name = $this->_getCollectionTitle($item->Collection);
+	$item_in_context_link = null;
+
+	// fcd1, 03/25/14:
+	// BEGIN: Debug code
+	$itemInContextElement = $this->_createElement('ItemInContext',
+						      $exhibit_title . '<=>' . $collection_name);
+	$parentElement->appendChild($itemInContextElement);
+	// END: Debug code
+	
+	if (!strcmp($exhibit_title, $collection_name)) {
+	  $item_in_context_link = 
+	    absolute_url(html_escape(exhibit_builder_exhibit_uri($exhibit, $exhibit_page)));
+	  break;
+	}
+
+      }
+
+      if ($item_in_context_link) {
+	$item_in_context_link = str_replace('/admin','',$item_in_context_link);
+	$itemInContextElement = $this->_createElement('ItemInContext',
+						      $item_in_context_link);
+	$parentElement->appendChild($itemInContextElement);
+      }
+      
+    }
+    
 
     /**
      * Build an itemType element in an item context.
