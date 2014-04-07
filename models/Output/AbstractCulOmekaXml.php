@@ -291,6 +291,11 @@ abstract class Output_AbstractCulOmekaXml
     {
 
       $exhibit_pages = CulCustomizePlugin::return_exhibit_pages_containing_current_item();
+
+      if (!($exhibit_pages)) {
+	return;
+      }
+
       $exhibit_page_containing_item = NULL;
 
       // Check all the pages containing the item to see if we get a match                                 
