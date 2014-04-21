@@ -290,7 +290,7 @@ abstract class Output_AbstractCulOmekaXml
     protected function _buildItemInContext(Item $item, DOMElement $parentElement)
     {
 
-      $exhibit_pages = CulCustomizePlugin::return_exhibit_pages_containing_current_item();
+      $exhibit_pages = CulCustomizePlugin::return_exhibit_pages_containing_current_item($item);
 
       if (!($exhibit_pages)) {
 	return;
