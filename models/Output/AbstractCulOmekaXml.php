@@ -305,13 +305,6 @@ abstract class Output_AbstractCulOmekaXml
 	$collection_name = $this->_getCollectionTitle($item->Collection);
 	$item_in_context_link = null;
 
-	// fcd1, 03/25/14:
-	// BEGIN: Debug code
-	$itemInContextElement = $this->_createElement('ItemInContext',
-						      $exhibit_title . '<=>' . $collection_name);
-	$parentElement->appendChild($itemInContextElement);
-	// END: Debug code
-	
 	if (!strcmp($exhibit_title, $collection_name)) {
 	  $item_in_context_link = 
 	    absolute_url(html_escape(exhibit_builder_exhibit_uri($exhibit, $exhibit_page)));
